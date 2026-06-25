@@ -1,0 +1,9 @@
+---
+- name: Configure OSPF Process
+  cisco.ios.ios_config:
+    lines:
+      - router ospf {{ ospf_process_id }}
+      - router-id {{ loopback_ip }}
+      - log-adjacency-changes
+      - "{{ 'network ' + item.network + ' ' + item.wildcard + ' area ' + ospf_area|string }}"
+  loop: "{{ ospf_networks }}"

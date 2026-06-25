@@ -1,0 +1,10 @@
+---
+- name: Set hostname
+  cisco.ios.ios_hostname:
+    config:
+      hostname: "{{ hostname }}"
+
+- name: Set domain name
+  cisco.ios.ios_config:
+    lines:
+      - "ip domain-name {{ domain_name }}"

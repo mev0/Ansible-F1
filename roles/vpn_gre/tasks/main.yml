@@ -1,0 +1,11 @@
+---
+- name: Configure GRE Tunnels
+  cisco.ios.ios_config:
+    lines:
+      - interface Tunnel{{ item.id }}
+      - description {{ item.description }}
+      - ip address {{ item.local_ip }} 255.255.255.252
+      - tunnel source {{ item.tunnel_source }}
+      - tunnel destination {{ item.tunnel_destination }}
+      - tunnel protection ipsec profile MY_IPSEC_PROFILE
+  loop: "{{ tunnels }}"

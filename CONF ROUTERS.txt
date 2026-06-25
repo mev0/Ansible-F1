@@ -1,0 +1,123 @@
+R1
+enable
+conf t
+
+hostname R1
+
+ip domain-name ansible.local
+
+username ansible privilege 15 secret Ansible123
+
+crypto key generate rsa modulus 2048
+
+ip ssh version 2
+
+line vty 0 4
+ login local
+ transport input ssh
+ exit
+
+interface GigabitEthernet0/0
+ ip address 192.168.0.10 255.255.255.0
+ no shutdown
+ exit
+
+interface GigabitEthernet0/1
+ ip address 10.0.12.1 255.255.255.252
+ no shutdown
+ exit
+
+interface GigabitEthernet0/2
+ ip address 10.0.13.1 255.255.255.252
+ no shutdown
+ exit
+
+interface Loopback0
+ ip address 172.16.1.1 255.255.255.255
+ exit
+
+end
+wr
+
+R2
+enable
+conf t
+
+hostname R2
+
+ip domain-name ansible.local
+
+username ansible privilege 15 secret Ansible123
+
+crypto key generate rsa modulus 2048
+
+ip ssh version 2
+
+line vty 0 4
+ login local
+ transport input ssh
+ exit
+
+interface GigabitEthernet0/0
+ ip address 192.168.0.30 255.255.255.0
+ no shutdown
+ exit
+
+interface GigabitEthernet0/1
+ ip address 10.0.12.2 255.255.255.252
+ no shutdown
+ exit
+
+interface GigabitEthernet0/2
+ ip address 10.0.23.1 255.255.255.252
+ no shutdown
+ exit
+
+interface Loopback0
+ ip address 172.16.2.1 255.255.255.255
+ exit
+
+end
+wr
+
+
+R3
+enable
+conf t
+
+hostname R3
+
+ip domain-name ansible.local
+
+username ansible privilege 15 secret Ansible123
+
+crypto key generate rsa modulus 2048
+
+ip ssh version 2
+
+line vty 0 4
+ login local
+ transport input ssh
+ exit
+
+interface GigabitEthernet0/0
+ ip address 192.168.0.20 255.255.255.0
+ no shutdown
+ exit
+
+interface GigabitEthernet0/1
+ ip address 10.0.23.2 255.255.255.252
+ no shutdown
+ exit
+
+interface GigabitEthernet0/2
+ ip address 10.0.13.2 255.255.255.252
+ no shutdown
+ exit
+
+interface Loopback0
+ ip address 172.16.3.1 255.255.255.255
+ exit
+
+end
+wr

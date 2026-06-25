@@ -1,0 +1,9 @@
+---
+- name: Phase 1 - Network Automation (Full-Mesh VPN)
+  hosts: routers
+  gather_facts: no
+  roles:
+    - base_config
+    - vpn_ipsec
+    - vpn_gre
+    - routing_ospf

@@ -1,0 +1,37 @@
+---
+hostname: R1
+
+loopback_ip: 172.16.1.1
+loopback_mask: 255.255.255.255
+
+ikev2_peers:
+  - name: R2
+    address: 10.0.12.2
+
+  - name: R3
+    address: 10.0.13.2
+
+tunnels:
+  - id: 12
+    description: "Tunnel to R2"
+    local_ip: 172.20.12.1
+    remote_ip: 172.20.12.2
+    tunnel_source: GigabitEthernet0/1
+    tunnel_destination: 10.0.12.2
+
+  - id: 13
+    description: "Tunnel to R3"
+    local_ip: 172.20.13.1
+    remote_ip: 172.20.13.2
+    tunnel_source: GigabitEthernet0/2
+    tunnel_destination: 10.0.13.2
+
+ospf_networks:
+  - network: 172.16.1.1
+    wildcard: 0.0.0.0
+
+  - network: 172.20.12.0
+    wildcard: 0.0.0.3
+
+  - network: 172.20.13.0
+    wildcard: 0.0.0.3

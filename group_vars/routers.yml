@@ -1,0 +1,14 @@
+ansible_network_os: cisco.ios.ios
+ansible_connection: ansible.netcommon.network_cli
+
+ansible_ssh_pass: "{{ vault_ansible_ssh_pass }}"
+ansible_become: yes
+ansible_become_method: enable
+ansible_become_password: "{{ vault_ansible_ssh_pass }}"
+
+ansible_command_timeout: 60
+ansible_connect_timeout: 30
+
+domain_name: ansible.local
+ospf_process_id: 1
+ospf_area: 0

@@ -1,0 +1,51 @@
+---
+- name: Configure IKEv2 Proposal
+  cisco.ios.ios_config:
+    parents:
+      - crypto ikev2 proposal MY_PROPOSAL
+    lines:
+      - encryption aes-cbc-256
+      - integrity sha256
+      - group 14
+
+- name: Configure IKEv2 Policy
+  cisco.ios.ios_config:
+    parents:
+      - crypto ikev2 policy MY_POLICY
+    lines:
+      - proposal MY_PROPOSAL
+
+- name: Configure IKEv2 Keyring
+  cisco.ios.ios_config:
+    parents:
+      - crypto ikev2 keyring MY_KEYRING
+      - peer {{ item.name }}
+    lines:
+      - address {{ item.address }}
+      - pre-shared-key {{ vault_ansible_ssh_pass }}
+  loop: "{{ ikev2_peers }}"
+
+- name: Configure IKEv2 Profile
+  cisco.ios.ios_config:
+    parents:
+      - crypto ikev2 profile MY_PROFILE
+    lines:
+      - match identity remote address 0.0.0.0 0.0.0.0
+      - authentication remote pre-share
+      - authentication local pre-share
+      - keyring local MY_KEYRING
+
+- name: Configure IPSec Transform Set
+  cisco.ios.ios_config:
+    parents:
+      - crypto ipsec transform-set MY_TRANSFORM_SET esp-aes 256 esp-sha256-hmac
+    lines:
+      - mode transport
+
+- name: Configure IPSec Profile
+  cisco.ios.ios_config:
+    parents:
+      - crypto ipsec profile MY_IPSEC_PROFILE
+    lines:
+      - set transform-set MY_TRANSFORM_SET
+      - set ikev2-profile MY_PROFILE
