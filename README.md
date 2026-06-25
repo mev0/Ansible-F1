@@ -1,42 +1,122 @@
-# Proyecto de Automatización de Redes - Fase 1
+# Proyecto de Automatización de Redes con Ansible – Fase 1
 
-Este proyecto utiliza Ansible para automatizar la configuración de una topología VPN Full-Mesh (IPSec + GRE) con enrutamiento OSPF en tres routers Cisco IOS.
+## Descripción
 
-## Estructura del Proyecto
+Este proyecto tiene como objetivo automatizar la configuración de una topología VPN Full-Mesh entre tres routers Cisco IOS utilizando Ansible.
 
-- `inventory/hosts.ini`: Definición de los routers y sus IPs de gestión.
-- `group_vars/`: Variables compartidas (configuración de conexión, OSPF, etc.).
-- `host_vars/`: Configuraciones específicas de cada router (túneles, redes OSPF local).
-- `roles/`:
-    - `base_config`: Configura hostname y dominio.
-    - `vpn_ipsec`: Configura políticas IKEv2 y perfiles IPSec.
-    - `vpn_gre`: Configura las interfaces Tunnel con protección IPSec.
-    - `routing_ospf`: Configura el proceso OSPF y las redes a anunciar.
-- `site.yml`: Playbook principal.
-- `ansible.cfg`: Configuración por defecto de Ansible.
+La solución implementa:
 
-## Requisitos
+* VPN GRE entre todos los routers.
+* Protección de los túneles mediante IPSec con IKEv2.
+* Enrutamiento dinámico mediante OSPF.
+* Configuración automática utilizando playbooks y roles de Ansible.
 
-- Ansible instalado en la máquina de control.
-- Conectividad SSH a los routers (configurada en la fase 0/base).
-- Los routers deben tener las direcciones IP físicas ya configuradas (G0/1, G0/2).
+El proyecto corresponde a la **Fase 1** de la asignatura, por lo que únicamente contempla la automatización con Ansible, sin integración CI/CD.
 
-## Uso
+---
 
-1.  Asegúrate de que las IPs en `inventory/hosts.ini` sean correctas.
-2.  El archivo `group_vars/vault.yml` contiene la contraseña `Ansible123`. Se recomienda encriptarlo antes de usar:
-    ```bash
-    ansible-vault encrypt group_vars/vault.yml
-    ```
-3.  Ejecuta el playbook:
-    ```bash
-    ansible-playbook site.yml
-    ```
+# Topología
 
-## Verificación
+La red está formada por tres routers Cisco IOS conectados entre sí mediante una topología Full-Mesh.
 
-Una vez ejecutado, puedes verificar la conectividad con:
-- `show crypto ikev2 sa`
-- `show ip interface brief | include Tunnel`
-- `show ip route ospf`
-- `ping 172.16.x.x` (Loopback de otro router)
+Cada router posee:
+
+* Interfaces físicas para la comunicación entre routers.
+* Una interfaz Loopback utilizada para comprobar el funcionamiento de OSPF.
+* Dos túneles GRE protegidos con IPSec.
+
+---
+
+# Estructura del proyecto
+
+```
+ansible-network/
+│
+├── inventory/
+├── group_vars/
+├── host_vars/
+├── roles/
+│   ├── base_config/
+│   ├── vpn_ipsec/
+│   ├── vpn_gre/
+│   └── routing_ospf/
+├── site.yml
+├── ansible.cfg
+├── requirements.yml
+├── Dockerfile
+├── entrypoint.sh
+└── CONF ROUTERS.txt
+```
+
+## Descripción de los roles
+
+**base_config**
+
+Configura parámetros básicos del router.
+
+**vpn_ipsec**
+
+Configura IKEv2, Keyring, Transform Set y Profile IPSec.
+
+**vpn_gre**
+
+Crea los túneles GRE y aplica la protección IPSec.
+
+**routing_ospf**
+
+Configura el proceso OSPF y publica las redes correspondientes.
+
+---
+
+# Requisitos
+
+* Ansible instalado.
+* Colección `cisco.ios`.
+* Acceso SSH a los routers Cisco IOS.
+* Direccionamiento IP previamente configurado en las interfaces físicas.
+
+---
+
+# Ejecución
+
+Desde el directorio del proyecto ejecutar:
+
+```bash
+ansible-playbook site.yml --ask-vault-pass -vvv
+```
+
+---
+
+# Verificación
+
+Para comprobar el funcionamiento de la automatización pueden utilizarse los siguientes comandos en los routers:
+
+```
+show ip interface brief | include Tunnel
+show crypto session
+show crypto ikev2 sa
+show ip ospf neighbor
+show ip route ospf
+```
+
+También es posible verificar la conectividad mediante:
+
+```
+ping 172.16.2.1
+ping 172.16.3.1
+```
+
+En Wireshark se puede comprobar el cifrado del tráfico capturando sobre el enlace físico entre routers y aplicando el filtro:
+
+```
+esp
+```
+
+---
+
+# Autor
+
+Proyecto desarrollado para la asignatura de Automatización de Redes.
+
+Fase 1 – Automatización mediante Ansible.
+
