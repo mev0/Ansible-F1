@@ -30,22 +30,37 @@ Cada router posee:
 # Estructura del proyecto
 
 ```
-ansible-network/
-│
-├── inventory/
-├── group_vars/
-├── host_vars/
-├── roles/
-│   ├── base_config/
-│   ├── vpn_ipsec/
-│   ├── vpn_gre/
-│   └── routing_ospf/
-├── site.yml
+/ansible-network
 ├── ansible.cfg
-├── requirements.yml
+├── CONF ROUTERS.txt
 ├── Dockerfile
 ├── entrypoint.sh
-└── CONF ROUTERS.txt
+├── group_vars
+│   ├── all.yml
+│   └── routers.yml
+├── host_vars
+│   ├── R1.yml
+│   ├── R2.yml
+│   └── R3.yml
+├── inventory
+│   └── hosts.ini
+├── README.md
+├── requirements.yml
+├── roles
+│   ├── base_config
+│   │   └── tasks
+│   │       └── main.yml
+│   ├── routing_ospf
+│   │   └── tasks
+│   │       └── main.yml
+│   ├── vpn_gre
+│   │   └── tasks
+│   │       └── main.yml
+│   └── vpn_ipsec
+│       └── tasks
+│           └── main.yml
+└── site.yml
+
 ```
 
 ## Descripción de los roles
